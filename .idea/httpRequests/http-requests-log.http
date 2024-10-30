@@ -1,0 +1,48 @@
+POST http://localhost/api/v1/users
+Content-Type: application/json
+Content-Length: 51
+User-Agent: IntelliJ HTTP Client/PhpStorm 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "email": "test@test",
+  "password": "content"
+}
+
+<> 2024-10-30T191906.422.html
+
+###
+
+POST http://localhost/api/v1/users
+Content-Type: application/json
+Content-Length: 54
+User-Agent: IntelliJ HTTP Client/PhpStorm 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "email": "test@test.ru",
+  "password": "content"
+}
+
+<> 2024-10-30T191852.200.json
+
+###
+
+POST http://localhost/api/v1/users
+Content-Type: application/json
+Content-Length: 54
+User-Agent: IntelliJ HTTP Client/PhpStorm 2024.2.4
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "email": "test@test.ru",
+  "password": "content"
+}
+
+<> 2024-10-30T191809.500.html
+
+###
+
