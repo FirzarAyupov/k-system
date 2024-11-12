@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller\User;
+namespace App\Infrastructure\Controller\User;
 
-use App\Controller\User\DTO\AddUserDTO;
+use App\Infrastructure\Controller\User\DTO\AddUserDTO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -17,7 +17,7 @@ class AddUserController extends AbstractController
     ): JsonResponse
     {
         return $this->json([
-            'email' => $addUserDTO->email,
+            'login' => $addUserDTO->login,
             'password' => $addUserDTO->password
         ]);
     }

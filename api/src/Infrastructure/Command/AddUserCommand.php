@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Command;
+namespace App\Infrastructure\Command;
 
-use App\Service\UserService;
+use App\Application\Service\UserService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -27,7 +26,7 @@ class AddUserCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('email', InputArgument::REQUIRED, 'User email')
+            ->addArgument('login', InputArgument::REQUIRED, 'User login')
             ->addArgument('password', InputArgument::REQUIRED, 'User password');
     }
 
@@ -35,14 +34,14 @@ class AddUserCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $email = $input->getArgument('email');
+        $login = $input->getArgument('login');
         $password = $input->getArgument('password');
 
-        if (!$email && !$password) {
+        if (!$login && !$password) {
             $io->error(sprintf('You passed an argument'));
         }
 
-        $this->userService->addUser($email, $password);
+        $this->userService->addUser($login, $password);
 
         return Command::SUCCESS;
     }
