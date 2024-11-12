@@ -1,7 +1,7 @@
 import {Route, Routes} from "react-router-dom";
 import Login from "./pages/User/Login/login.tsx";
 import React from "react";
-import Teachers from "./pages/Admin/teachers.tsx";
+import TeachersList from "./pages/Admin/teachersList.tsx";
 import AuthProvider from "./provider/AuthProvider.tsx";
 import {ProtectedRoute} from "./components/ProtectedRoute.tsx";
 import MainLayout from "./pages/MainLayout.tsx";
@@ -10,9 +10,9 @@ import AddTeacher from "./pages/Admin/addTeacher.tsx";
 const App: React.FC = () => {
 
     const routes = [
-        { path: "/admin/teachers", label: "Учителя", component: <Teachers />, showInMenu: true },
+        { path: "/admin/teachers", label: "Учителя", component: <TeachersList />, showInMenu: true },
         { path: "/admin/teachers/add", label: "Добавить учителя", component: <AddTeacher />, showInMenu: true },
-        { path: "/admin/teachers/:id", label: "Учитель по ID", component: <Teachers />, showInMenu: false },
+        { path: "/admin/teachers/:id", label: "Учитель по ID", component: <TeachersList />, showInMenu: false },
     ];
 
     return (

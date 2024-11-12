@@ -1,21 +1,18 @@
-import {Button, Card, Flex, Space, Table, TableProps, Tag} from "antd";
+import {Button, Card, Flex, Space, Table} from "antd";
 import {PlusCircleFilled} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import {useAxiosConfig} from "../../services/useAxiosConfig.tsx";
 
-
-interface DataType {
-    key: string;
-    name: string;
-    age: number;
-    address: string;
-    tags: string[];
+interface Teacher {
+    id: number;
+    firstName: string;
+    lastName: string;
+    middleName: string;
 }
 
-
-const Teachers: React.FC = () => {
+const TeachersList: React.FC = () => {
     const navigate = useNavigate();
     const config = useAxiosConfig();
     const axiosInstance = axios.create(config);
@@ -38,19 +35,26 @@ const Teachers: React.FC = () => {
             dataIndex: 'id',
             key: 'id',
         }, {
-            title: 'Имя',
-            dataIndex: 'firstName',
-            key: 'firstName',
+            title: 'ФИО',
+            dataIndex: 'fullName',
+            key: 'fullName',
+            render: (_text: string, record: Teacher) => (
+                <div>
+                    {record.lastName} {record.firstName} {record.middleName}
+                </div>
+            )
         },
         {
-            title: 'Фамилия',
-            dataIndex: 'lastName',
-            key: 'lastName',
-        },
-        {
-            title: 'Отчество',
-            dataIndex: 'middleName',
-            key: 'middleName',
+            title: 'Действия',
+            dataIndex: 'actions',
+            key: 'actions',
+            render: (_: string, record: Teacher) => (
+                <Space size="middle">
+                    <a href={`/admin/teachers/${record.id}`}>Редактировать</a>
+                    <a>Просмотреть</a>
+                    <a>Удалить</a>
+                </Space>
+            ),
         },
     ];
 
@@ -62,10 +66,15 @@ const Teachers: React.FC = () => {
             <Flex align='start' vertical gap={"large"}>
                 <Button type={"primary"} size={"large"} icon={<PlusCircleFilled/>}
                         onClick={handleClick}>Добавить</Button>
-                <Table columns={columns} dataSource={teachers} rowKey={(record) => record.id} style={{width: '100%'}}/>
+                <Table
+                    columns={columns}
+                    dataSource={teachers}
+                    rowKey={(record) => record.id}
+                    style={{width: '100%'}}
+                />
             </Flex>
         </Card>
     )
 }
 
-export default Teachers
+export default TeachersList
