@@ -50,8 +50,8 @@ const TeachersList: React.FC = () => {
             key: 'actions',
             render: (_: string, record: Teacher) => (
                 <Space size="middle">
-                    <a href={`/admin/teachers/${record.id}`}>Редактировать</a>
-                    <a>Просмотреть</a>
+                    <a href={`/admin/teachers/${record.id}/view`}>Просмотреть</a>
+                    <a href={`/admin/teachers/${record.id}/edit`}>Редактировать</a>
                     <a>Удалить</a>
                 </Space>
             ),

@@ -6,6 +6,7 @@ namespace App\Application\Service;
 
 use App\Application\DTO\AddTeacherDTO;
 use App\Application\DTO\TeacherDTO;
+use App\Application\DTO\UpdateTeacherDTO;
 use App\Application\Helper\AppError;
 use App\Domain\Entity\Teacher;
 use App\Infrastructure\Repository\TeacherRepository;
@@ -38,10 +39,11 @@ readonly class TeacherService
 
     public function getTeacherList(): array
     {
-        $teachers = $this->teacherRepository->findAll();
+        $teachers = $this->teacherRepository->findBy([], orderBy: ['lastName' => 'ASC']);
         $teacherDTOs = [];
         foreach ($teachers as $teacher) {
             $teacherDTOs[] = new TeacherDTO(
+                login: $teacher->getUser()->getLogin(),
                 id: $teacher->getId(),
                 firstName: $teacher->getFirstName(),
                 lastName: $teacher->getLastName(),
@@ -50,5 +52,33 @@ readonly class TeacherService
         }
 
         return $teacherDTOs;
+    }
+
+    public function getTeacher(int $id): TeacherDTO
+    {
+        $teacher = $this->teacherRepository->find($id);
+
+        return new TeacherDTO(
+            login: $teacher->getUser()->getLogin(),
+            id: $teacher->getId(),
+            firstName: $teacher->getFirstName(),
+            lastName: $teacher->getLastName(),
+            middleName: $teacher->getMiddleName()
+        );
+    }
+
+    public function updateTeacher(UpdateTeacherDTO $updateTeacherDTO): ?AppError
+    {
+        if (!$teacher = $this->teacherRepository->find($updateTeacherDTO->id)) {
+            return AppError::setMessage("Не найден пользователь с id {$updateTeacherDTO->id}");
+        }
+
+        $teacher->setFirstName($updateTeacherDTO->firstName);
+        $teacher->setLastName($updateTeacherDTO->lastName);
+        $teacher->setMiddleName($updateTeacherDTO->middleName);
+
+        $this->teacherRepository->save($teacher);
+
+        return null;
     }
 }

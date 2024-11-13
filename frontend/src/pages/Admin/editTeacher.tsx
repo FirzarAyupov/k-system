@@ -1,7 +1,8 @@
 import {Button, Card, Form, Input, message} from "antd";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useAxiosConfig} from "../../services/useAxiosConfig.tsx";
 import axios from "axios";
+import {useNavigate, useParams} from "react-router-dom";
 
 
 interface TeacherFormValues {
@@ -12,19 +13,33 @@ interface TeacherFormValues {
     $middleName: string;
 }
 
-const AddTeacher = () => {
+const EditTeacher = () => {
+    const {id} = useParams();
     const config = useAxiosConfig();
     const axiosInstance = axios.create(config);
+    const navigate = useNavigate();
 
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        axiosInstance.get(`/teachers/${id}`)
+            .then(response => {
+                console.log(response.data);
+                form.setFieldsValue(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }, []);
+
     const onFinish = async (values: TeacherFormValues) => {
         setLoading(true);
         try {
-            const response = await axiosInstance.post('/teacher', values);
-            const data = await response.data;
-            console.log(data)
+            const dataToSubmit = {...values, id: id}
+            await axiosInstance.put('/teacher', dataToSubmit);
+            navigate('/admin/teachers');
         } catch (error) {
             message.error('Произошла ошибка при добавлении преподавателя');
             console.error(error);
@@ -43,27 +58,8 @@ const AddTeacher = () => {
                 <Form.Item
                     name="login"
                     label="Логин"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Пожалуйста, введите логин',
-                        },
-                    ]}
                 >
-                    <Input/>
-                </Form.Item>
-
-                <Form.Item
-                    name="password"
-                    label="Пароль"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Пожалуйста, введите пароль',
-                        },
-                    ]}
-                >
-                    <Input.Password/>
+                    <Input disabled={true}/>
                 </Form.Item>
 
                 <Form.Item
@@ -111,7 +107,7 @@ const AddTeacher = () => {
                         htmlType="submit"
                         loading={loading}
                     >
-                        Добавить преподавателя
+                        Сохранить
                     </Button>
                 </Form.Item>
             </Form>
@@ -119,4 +115,4 @@ const AddTeacher = () => {
     );
 };
 
-export default AddTeacher
+export default EditTeacher
