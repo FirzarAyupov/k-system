@@ -7,7 +7,6 @@ import {useNavigate, useParams} from "react-router-dom";
 
 interface TeacherFormValues {
     $login: string;
-    $password: string;
     $firstName: string;
     $lastName: string;
     $middleName: string;

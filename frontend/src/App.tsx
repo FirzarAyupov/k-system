@@ -6,8 +6,8 @@ import AuthProvider from "./provider/AuthProvider.tsx";
 import {ProtectedRoute} from "./components/ProtectedRoute.tsx";
 import MainLayout from "./pages/MainLayout.tsx";
 import AddTeacher from "./pages/Admin/addTeacher.tsx";
-import EditTeacher from "./pages/Admin/editTeacher.tsx";
-import ViewTeacher from "./pages/Admin/ViewTeacher.tsx";
+import ViewTeacher from "./pages/Teacher/viewTeacher.tsx";
+import EditTeacher from "./pages/Teacher/editTeacher.tsx";
 
 const App: React.FC = () => {
 
