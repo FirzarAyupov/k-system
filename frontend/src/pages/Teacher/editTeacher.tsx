@@ -1,8 +1,10 @@
-import {Button, Card, Form, Input, message} from "antd";
+import {Button, Card, DatePicker, Form, Input, message, Select} from "antd";
 import {useEffect, useState} from "react";
 import {useAxiosConfig} from "../../services/useAxiosConfig.tsx";
 import axios from "axios";
 import {useNavigate, useParams} from "react-router-dom";
+import locale from "antd/es/date-picker/locale/ru_RU";
+import TextArea from "antd/es/input/TextArea";
 
 
 interface TeacherFormValues {
@@ -49,55 +51,67 @@ const EditTeacher = () => {
 
     return (
         <Card>
-            <Form
-                form={form}
-                layout="vertical"
-                onFinish={onFinish}
-            >
-                <Form.Item
-                    name="login"
-                    label="Логин"
-                >
+            <Form form={form} onFinish={onFinish} labelCol={{span: 4}}>
+
+                <Form.Item name="login" label="Логин" wrapperCol={{span: 4}}>
                     <Input disabled={true}/>
                 </Form.Item>
 
-                <Form.Item
-                    name="lastName"
-                    label="Фамилия"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Пожалуйста, введите фамилию',
-                        },
-                    ]}
+                <Form.Item name="lastName" label="Фамилия" wrapperCol={{span: 6}}
+                           rules={[
+                               {
+                                   required: true,
+                                   message: 'Пожалуйста, введите фамилию',
+                               },
+                           ]}
                 >
                     <Input/>
                 </Form.Item>
 
-                <Form.Item
-                    name="firstName"
-                    label="Имя"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Пожалуйста, введите имя',
-                        },
-                    ]}
+                <Form.Item name="firstName" label="Имя" wrapperCol={{span: 6}}
+                           rules={[
+                               {
+                                   required: true,
+                                   message: 'Пожалуйста, введите имя',
+                               },
+                           ]}
                 >
                     <Input/>
                 </Form.Item>
 
-                <Form.Item
-                    name="middleName"
-                    label="Отчество"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Пожалуйста, введите отчество',
-                        },
-                    ]}
+                <Form.Item name="middleName" label="Отчество" wrapperCol={{span: 6}}
+                           rules={[
+                               {
+                                   required: true,
+                                   message: 'Пожалуйста, введите отчество',
+                               },
+                           ]}
                 >
                     <Input/>
+                </Form.Item>
+                <Form.Item label="Дата рождения" name="birthdate">
+                    <DatePicker locale={locale}/>
+                </Form.Item>
+                <Form.Item label="Email" name="email" wrapperCol={{span: 6}}>
+                    <Input type="email"/>
+                </Form.Item>
+                <Form.Item label="Адрес" name="address" wrapperCol={{span: 6}}>
+                    <TextArea autoSize={{minRows: 2}}/>
+                </Form.Item>
+
+                <Form.Item label="Педстаж" name="experience" wrapperCol={{span: 4}}>
+                    <Input type="number"/>
+                </Form.Item>
+                <Form.Item label="Категория" name="category" wrapperCol={{span: 4}}>
+                    <Select
+                        options={[{value: "A", label: "A"}, {value: "B", label: "B"}, {value: "C", label: "C"}]}/>
+                </Form.Item>
+
+                <Form.Item label="Последняя cертификация" name="lastCertification">
+                    <DatePicker picker="year" locale={locale}/>
+                </Form.Item>
+                <Form.Item label="Следующая cертификация" name="nextCertification">
+                    <DatePicker picker="year" locale={locale}/>
                 </Form.Item>
 
                 <Form.Item>
