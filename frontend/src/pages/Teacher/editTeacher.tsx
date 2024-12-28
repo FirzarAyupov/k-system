@@ -5,13 +5,21 @@ import axios from "axios";
 import {useNavigate, useParams} from "react-router-dom";
 import locale from "antd/es/date-picker/locale/ru_RU";
 import TextArea from "antd/es/input/TextArea";
+import moment from "moment";
 
 
 interface TeacherFormValues {
     $login: string;
     $firstName: string;
     $lastName: string;
-    $middleName: string;
+    middleName: string;
+    birthdate: string;
+    email: string;
+    address: string;
+    experience: string;
+    category: string;
+    lastCertification: string;
+    nextCertification: string;
 }
 
 const EditTeacher = () => {
@@ -38,7 +46,8 @@ const EditTeacher = () => {
     const onFinish = async (values: TeacherFormValues) => {
         setLoading(true);
         try {
-            const dataToSubmit = {...values, id: id}
+            const birthdate = moment(values.birthdate).format('YYYY-MM-DD');
+            const dataToSubmit = {...values, id: id, birthdate: birthdate};
             await axiosInstance.put('/teacher', dataToSubmit);
             navigate('/admin/teachers');
         } catch (error) {
@@ -90,7 +99,7 @@ const EditTeacher = () => {
                     <Input/>
                 </Form.Item>
                 <Form.Item label="Дата рождения" name="birthdate">
-                    <DatePicker locale={locale}/>
+                    <DatePicker locale={locale} format="DD.MM.YYYY"/>
                 </Form.Item>
                 <Form.Item label="Email" name="email" wrapperCol={{span: 6}}>
                     <Input type="email"/>

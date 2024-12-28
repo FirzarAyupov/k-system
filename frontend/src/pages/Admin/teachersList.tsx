@@ -1,4 +1,4 @@
-import {Button, Card, Flex, Space, Table} from "antd";
+import {Button, Card, Flex, message, Popconfirm, Space, Table} from "antd";
 import {PlusCircleFilled} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -9,7 +9,7 @@ interface Teacher {
     id: number;
     firstName: string;
     lastName: string;
-    middleName: string;
+    patronymic: string;
 }
 
 const TeachersList: React.FC = () => {
@@ -40,7 +40,7 @@ const TeachersList: React.FC = () => {
             key: 'fullName',
             render: (_text: string, record: Teacher) => (
                 <div>
-                    {record.lastName} {record.firstName} {record.middleName}
+                    {record.lastName} {record.firstName} {record.patronymic}
                 </div>
             )
         },
@@ -52,7 +52,14 @@ const TeachersList: React.FC = () => {
                 <Space size="middle">
                     <a href={`/admin/teachers/${record.id}/view`}>Просмотреть</a>
                     <a href={`/admin/teachers/${record.id}/edit`}>Редактировать</a>
-                    <a>Удалить</a>
+                    <Popconfirm
+                        title="Вы уверены, что хотите удалить этого учителя?"
+                        onConfirm={() => handleDelete(record.id)}
+                        okText="Да"
+                        cancelText="Нет"
+                    >
+                        <a>Удалить</a>
+                    </Popconfirm>
                 </Space>
             ),
         },
@@ -61,6 +68,27 @@ const TeachersList: React.FC = () => {
     const handleClick = () => {
         navigate('/admin/teachers/add'); // укажите здесь путь к нужной странице
     };
+    const handleDelete = async (id: number) => {
+        try {
+            const response = await axiosInstance.delete(`/teachers/${id}`);
+
+            if (response.status === 200) {
+                message.success('Учитель успешно удалён');
+                // Удаляем учителя из состояния после успешного удаления
+                setTeachers((prevTeachers) => prevTeachers.filter((teacher: Teacher) => teacher.id !== id));
+            } else {
+                message.error(`Ошибка удаления: ${response.statusText}`);
+            }
+        } catch (error: unknown) {
+            console.error(error);
+            if (error instanceof Error) {
+                message.error(`Ошибка: ${error.message}`);
+            } else {
+                message.error('Неизвестная ошибка');
+            }
+        }
+    };
+
     return (
         <Card title='Педагоги'>
             <Flex align='start' vertical gap={"large"}>
@@ -75,6 +103,8 @@ const TeachersList: React.FC = () => {
             </Flex>
         </Card>
     )
+
+
 }
 
 export default TeachersList

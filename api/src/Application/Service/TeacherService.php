@@ -9,6 +9,7 @@ use App\Application\DTO\TeacherDTO;
 use App\Application\DTO\UpdateTeacherDTO;
 use App\Application\Helper\AppError;
 use App\Domain\Entity\Teacher;
+use App\Domain\Entity\TeacherDetail;
 use App\Infrastructure\Repository\TeacherRepository;
 
 readonly class TeacherService
@@ -27,10 +28,12 @@ readonly class TeacherService
         }
         $user = $result;
 
-        $teacher = new Teacher($user);
-        $teacher->setFirstName($command->firstName);
-        $teacher->setLastName($command->lastName);
-        $teacher->setMiddleName($command->middleName);
+        $teacher = new Teacher(
+            user: $user,
+            firstName: $command->firstName,
+            lastName: $command->lastName,
+            patronymic: $command->patronymic
+        );
 
         $this->teacherRepository->save($teacher);
 
@@ -39,15 +42,16 @@ readonly class TeacherService
 
     public function getTeacherList(): array
     {
-        $teachers = $this->teacherRepository->findBy([], orderBy: ['lastName' => 'ASC']);
+        $teachers = $this->teacherRepository->findBy([], orderBy: ['personalData.lastName' => 'ASC']);
         $teacherDTOs = [];
+        /* @var Teacher $teacher */
         foreach ($teachers as $teacher) {
             $teacherDTOs[] = new TeacherDTO(
                 login: $teacher->getUser()->getLogin(),
                 id: $teacher->getId(),
                 firstName: $teacher->getFirstName(),
                 lastName: $teacher->getLastName(),
-                middleName: $teacher->getMiddleName()
+                patronymic: $teacher->getPatronymic()
             );
         }
 
@@ -58,12 +62,15 @@ readonly class TeacherService
     {
         $teacher = $this->teacherRepository->find($id);
 
+        $details = $teacher->getPersonalData();
+
         return new TeacherDTO(
             login: $teacher->getUser()->getLogin(),
             id: $teacher->getId(),
             firstName: $teacher->getFirstName(),
             lastName: $teacher->getLastName(),
-            middleName: $teacher->getMiddleName()
+            patronymic: $teacher->getMiddleName(),
+            birthdate: $details->getBirthDate()->format('Y-m-d'),
         );
     }
 
@@ -77,8 +84,25 @@ readonly class TeacherService
         $teacher->setLastName($updateTeacherDTO->lastName);
         $teacher->setMiddleName($updateTeacherDTO->middleName);
 
+        $detail = new TeacherDetail();
+        $detail->setAddress($updateTeacherDTO->address);
+        $date = \DateTimeImmutable::createFromFormat('Y-m-d', $updateTeacherDTO->birthdate);
+        $detail->setBirthDate($date);
+
+        $teacher->addTeacherDetail($detail);
+
         $this->teacherRepository->save($teacher);
 
         return null;
+    }
+
+    public function deleteTeacher(int $id): void
+    {
+        if (!$teacher = $this->teacherRepository->find($id)) {
+            return;
+        }
+        $this->teacherRepository->remove($teacher);
+
+        $this->userService->deleteUser($teacher->getUser()->getId()->toRfc4122());
     }
 }

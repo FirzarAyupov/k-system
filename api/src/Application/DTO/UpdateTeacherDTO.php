@@ -11,6 +11,13 @@ class UpdateTeacherDTO
         public string $firstName,
         public string $lastName,
         public ?string $middleName,
+        public ?string $birthdate,
+        public ?string $email,
+        public ?string $address,
+        public ?string $experience,
+        public ?string $category,
+        public ?string $lastCertification,
+        public ?string $nextCertification,
     ) {
     }
 }

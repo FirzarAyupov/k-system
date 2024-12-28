@@ -21,4 +21,10 @@ class TeacherRepository extends ServiceEntityRepository
         $this->getEntityManager()->persist($teacher);
         $this->getEntityManager()->flush();
     }
+
+    public function remove(Teacher $teacher): void
+    {
+        $this->getEntityManager()->remove($teacher);
+        $this->getEntityManager()->flush();
+    }
 }

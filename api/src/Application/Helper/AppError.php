@@ -7,9 +7,8 @@ namespace App\Application\Helper;
 readonly class AppError
 {
     private function __construct(
-        private string $message
-    )
-    {
+        private string $message,
+    ) {
     }
 
     public static function setMessage(string $message): self

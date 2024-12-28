@@ -3,8 +3,6 @@
 namespace App\Domain\Entity;
 
 use App\Infrastructure\Repository\TeacherRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TeacherRepository::class)]
@@ -18,25 +16,27 @@ class Teacher
     #[ORM\OneToOne]
     private User $user;
 
-    #[ORM\Column(length: 255, nullable: false)]
-    private string $firstName;
+    #[ORM\Embedded(class: PersonalData::class, columnPrefix: false)]
+    private ?PersonalData $personalData = null;
 
-    #[ORM\Column(length: 255, nullable: false)]
-    private string $lastName;
+    #[ORM\Embedded(class: ContactData::class, columnPrefix: false)]
+    private ?ContactData $contactData = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $middleName = null;
+    #[ORM\Embedded(class: ExtraData::class, columnPrefix: false)]
+    private ?ExtraData $extraData = null;
 
-    /**
-     * @var Collection<int, TeacherDetail>
-     */
-    #[ORM\OneToMany(targetEntity: TeacherDetail::class, mappedBy: 'teacher', orphanRemoval: true)]
-    private Collection $teacherDetails;
-
-    public function __construct(User $user)
-    {
+    public function __construct(
+        User $user,
+        string $firstName,
+        string $lastName,
+        ?string $patronymic,
+    ) {
         $this->user = $user;
-        $this->teacherDetails = new ArrayCollection();
+        $this->personalData = new PersonalData(
+            firstName: $firstName,
+            lastName: $lastName,
+            patronymic: $patronymic
+        );
     }
 
     public function getId(): ?int
@@ -44,69 +44,68 @@ class Teacher
         return $this->id;
     }
 
-    public function getFirstName(): ?string
-    {
-        return $this->firstName;
-    }
-
-    public function setFirstName(?string $firsName): static
-    {
-        $this->firstName = $firsName;
-
-        return $this;
-    }
-
     public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setLastName(string $lastName): void
+    public function getFirstName(): ?string
     {
-        $this->lastName = $lastName;
+        return $this->personalData?->getFirstName();
     }
 
-    public function getLastName(): string
+    public function getLastName(): ?string
     {
-        return $this->lastName;
+        return $this->personalData?->getLastName();
     }
 
-    public function setMiddleName(?string $middleName): void
+    public function getPatronymic(): ?string
     {
-        $this->middleName = $middleName;
+        return $this->personalData?->getPatronymic();
     }
 
-    public function getMiddleName(): string
+    public function getFullName(): string
     {
-        return $this->middleName;
+        return $this->personalData?->getFullName();
     }
 
-    /**
-     * @return Collection<int, TeacherDetail>
-     */
-    public function getTeacherDetails(): Collection
-    {
-        return $this->teacherDetails;
-    }
-
-    public function addTeacherDetail(TeacherDetail $teacherDetail): static
-    {
-        if (!$this->teacherDetails->contains($teacherDetail)) {
-            $this->teacherDetails->add($teacherDetail);
-            $teacherDetail->setTeacher($this);
-        }
+    public function updatePersonalData(
+        ?string $firstName,
+        ?string $lastName,
+        ?string $patronymic,
+        ?\DateTimeImmutable $birthDate,
+    ): self {
+        $personalData = new PersonalData(
+            firstName: $firstName ?? $this->personalData->getFirstName(),
+            lastName: $lastName ?? $this->personalData->getLastName(),
+            patronymic: $patronymic ?? $this->personalData->getPatronymic(),
+            birthDate: $birthDate ?? $this->personalData->getBirthDate(),
+        );
+        $this->personalData = $personalData;
 
         return $this;
     }
 
-    public function removeTeacherDetail(TeacherDetail $teacherDetail): static
+    public function getContactData(): ContactData
     {
-        if ($this->teacherDetails->removeElement($teacherDetail)) {
-            // set the owning side to null (unless already changed)
-            if ($teacherDetail->getTeacher() === $this) {
-                $teacherDetail->setTeacher(null);
-            }
-        }
+        return $this->contactData;
+    }
+
+    public function updateContactData(ContactData $contactData): self
+    {
+        $this->contactData = $contactData;
+
+        return $this;
+    }
+
+    public function getExtraData(): ExtraData
+    {
+        return $this->extraData;
+    }
+
+    public function updateExtraData(ExtraData $extraData): self
+    {
+        $this->extraData = $extraData;
 
         return $this;
     }

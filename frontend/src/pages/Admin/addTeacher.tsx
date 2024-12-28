@@ -5,11 +5,11 @@ import axios from "axios";
 
 
 interface TeacherFormValues {
-    $login: string;
-    $password: string;
-    $firstName: string;
-    $lastName: string;
-    $middleName: string;
+    login: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    patronymic: string;
 }
 
 const AddTeacher = () => {
@@ -93,11 +93,11 @@ const AddTeacher = () => {
                 </Form.Item>
 
                 <Form.Item
-                    name="middleName"
+                    name="patronymic"
                     label="Отчество"
                     rules={[
                         {
-                            required: true,
+                            required: false,
                             message: 'Пожалуйста, введите отчество',
                         },
                     ]}

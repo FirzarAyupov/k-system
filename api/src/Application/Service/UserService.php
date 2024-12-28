@@ -13,9 +13,8 @@ readonly class UserService
 {
     public function __construct(
         private UserPasswordHasherInterface $passwordHasher,
-        private UserRepository              $userRepository
-    )
-    {
+        private UserRepository $userRepository,
+    ) {
     }
 
     public function addUser(string $login, string $plainPassword): AppError|User
@@ -34,5 +33,14 @@ readonly class UserService
         $this->userRepository->save($user);
 
         return $user;
+    }
+
+    public function deleteUser(string $id): void
+    {
+        if (!$user = $this->userRepository->find($id)) {
+            return;
+        }
+
+        $this->userRepository->remove($user);
     }
 }

@@ -11,7 +11,8 @@ class TeacherDTO
         public int $id,
         public string $firstName,
         public string $lastName,
-        public ?string $middleName = null,
+        public ?string $patronymic = null,
+        public ?string $birthdate = null,
     ) {
     }
 }

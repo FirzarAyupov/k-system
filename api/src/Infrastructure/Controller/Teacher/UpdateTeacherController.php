@@ -17,7 +17,7 @@ class UpdateTeacherController extends AbstractController
     ) {
     }
 
-    #[Route('/api/v1/teacher', name: 'app_teacher_add', methods: ['PUT'])]
+    #[Route('/api/v1/teacher', name: 'app_teacher_update', methods: ['PUT'])]
     public function __invoke(
         #[MapRequestPayload]
         UpdateTeacherDTO $updateTeacherDTO,
