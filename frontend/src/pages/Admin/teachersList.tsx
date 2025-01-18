@@ -9,7 +9,7 @@ interface Teacher {
     id: number;
     firstName: string;
     lastName: string;
-    patronymic: string;
+    middleName: string;
 }
 
 const TeachersList: React.FC = () => {
@@ -40,7 +40,7 @@ const TeachersList: React.FC = () => {
             key: 'fullName',
             render: (_text: string, record: Teacher) => (
                 <div>
-                    {record.lastName} {record.firstName} {record.patronymic}
+                    {record.lastName} {record.firstName} {record.middleName}
                 </div>
             )
         },

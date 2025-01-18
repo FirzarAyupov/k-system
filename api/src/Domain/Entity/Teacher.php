@@ -29,13 +29,13 @@ class Teacher
         User $user,
         string $firstName,
         string $lastName,
-        ?string $patronymic,
+        ?string $middleName,
     ) {
         $this->user = $user;
         $this->personalData = new PersonalData(
             firstName: $firstName,
             lastName: $lastName,
-            patronymic: $patronymic
+            middleName: $middleName
         );
     }
 
@@ -59,9 +59,9 @@ class Teacher
         return $this->personalData?->getLastName();
     }
 
-    public function getPatronymic(): ?string
+    public function getMiddleName(): ?string
     {
-        return $this->personalData?->getPatronymic();
+        return $this->personalData?->getMiddleName();
     }
 
     public function getFullName(): string
@@ -72,13 +72,13 @@ class Teacher
     public function updatePersonalData(
         ?string $firstName,
         ?string $lastName,
-        ?string $patronymic,
+        ?string $middleName,
         ?\DateTimeImmutable $birthDate,
     ): self {
         $personalData = new PersonalData(
             firstName: $firstName ?? $this->personalData->getFirstName(),
             lastName: $lastName ?? $this->personalData->getLastName(),
-            patronymic: $patronymic ?? $this->personalData->getPatronymic(),
+            middleName: $middleName ?? $this->personalData->getMiddleName(),
             birthDate: $birthDate ?? $this->personalData->getBirthDate(),
         );
         $this->personalData = $personalData;

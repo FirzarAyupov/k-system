@@ -32,7 +32,7 @@ readonly class TeacherService
             user: $user,
             firstName: $command->firstName,
             lastName: $command->lastName,
-            patronymic: $command->patronymic
+            middleName: $command->middleName
         );
 
         $this->teacherRepository->save($teacher);
@@ -51,7 +51,7 @@ readonly class TeacherService
                 id: $teacher->getId(),
                 firstName: $teacher->getFirstName(),
                 lastName: $teacher->getLastName(),
-                patronymic: $teacher->getPatronymic()
+                middleName: $teacher->getMiddleName()
             );
         }
 
@@ -69,7 +69,7 @@ readonly class TeacherService
             id: $teacher->getId(),
             firstName: $teacher->getFirstName(),
             lastName: $teacher->getLastName(),
-            patronymic: $teacher->getMiddleName(),
+            middleName: $teacher->getMiddleName(),
             birthdate: $details->getBirthDate()->format('Y-m-d'),
         );
     }

@@ -14,7 +14,7 @@ class PersonalData
     private string $lastName;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $patronymic = null;
+    private ?string $middleName = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $birthDate = null;
@@ -22,12 +22,12 @@ class PersonalData
     public function __construct(
         string $firstName,
         string $lastName,
-        ?string $patronymic = null,
+        ?string $middleName = null,
         ?\DateTimeImmutable $birthDate = null,
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->patronymic = $patronymic;
+        $this->middleName = $middleName;
         $this->birthDate = $birthDate;
     }
 
@@ -41,9 +41,9 @@ class PersonalData
         return $this->lastName;
     }
 
-    public function getPatronymic(): ?string
+    public function getMiddleName(): ?string
     {
-        return $this->patronymic;
+        return $this->middleName;
     }
 
     public function getBirthDate(): ?\DateTimeImmutable
@@ -55,8 +55,8 @@ class PersonalData
     {
         $fullName = $this->firstName.' '.$this->lastName;
 
-        if ($this->patronymic) {
-            $fullName .= ' '.$this->patronymic;
+        if ($this->middleName) {
+            $fullName .= ' '.$this->middleName;
         }
 
         return $fullName;
